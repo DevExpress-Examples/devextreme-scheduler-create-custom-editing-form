@@ -27,48 +27,48 @@ $(function(){
         
     
     function setContentTemplate(editParams){           
-            editPopupOptions.data = {};
-            editPopupOptions.data = editParams;
-            var movieInfo = data.find(e=>e.id == editParams.id) || {};            
-            var imageView = $(`<img src='${movieInfo.image}' class='dx-field-label'>`);
-            var infoView = $(`<div class='dx-field-label'><p><b>${movieInfo.text}</b></p>
-                              <p>Year: ${movieInfo.year}</p> 
-                              <p>Duration: ${movieInfo.duration} minutes</p></div>`);
-            var scheduleView = $("<div class='dx-field-label'><b>" + DevExpress.localization.formatDate(editParams.startDate, "shortTime") +
-                            " - " + DevExpress.localization.formatDate(editParams.endDate, "shortTime") +
-                        "</b></div><br/><div class='dx-field-label'><b>Price ($): </b></div>");            
-            var priceView = $(`<div id='priceView' class='dx-field-label'>${editParams.seatPrice ? editParams.seatPrice : "Pick a seat for pricing"}</div><br/><br/>`);            
-            var rowView = $("<div id='rowView' class='dx-field-label'></div><br/><br/>");           
-            var seatView = $("<div id='seatView' class='dx-field-label'></div><br/><br/>");
-            
-            
-          
-            rowView.dxSelectBox({...rowOptions,
-                                 value: editParams.seatRow,
-                                 onValueChanged: function(e){
-                                   if(seatView.dxSelectBox("instance").option("value")){ 
-                                     $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
-                                   }                                   
-                                 }
-                                });
-            seatView.dxSelectBox({...seatOptions,
-                                  value: editParams.seatNumber,
-                                  onValueChanged: function(e){
-                                    if(rowView.dxSelectBox("instance").option("value")){
-                                      $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
-                                   }                                    
-                                  }
-                                 });          
-          var scrollView = $("<div id='scrollView'></div>");
-         
-          scrollView.append(imageView, infoView, scheduleView, priceView, rowView, seatView).addClass("dx-fieldset");
-          
-          scrollView.dxScrollView({
-             height: '100%',
-             width: '100%'          
-          });          
-          
-          return scrollView;
+      editPopupOptions.data = {};
+      editPopupOptions.data = editParams;
+      var movieInfo = data.find(e=>e.id == editParams.id) || {};            
+      var imageView = $(`<img src='${movieInfo.image}' class='dx-field-label'>`);
+      var infoView = $(`<div class='dx-field-label'><p><b>${movieInfo.text}</b></p>
+                        <p>Year: ${movieInfo.year}</p> 
+                        <p>Duration: ${movieInfo.duration} minutes</p></div>`);
+      var scheduleView = $("<div class='dx-field-label'><b>" + DevExpress.localization.formatDate(editParams.startDate, "shortTime") +
+                      " - " + DevExpress.localization.formatDate(editParams.endDate, "shortTime") +
+                  "</b></div><br/><div class='dx-field-label'><b>Price ($): </b></div>");            
+      var priceView = $(`<div id='priceView' class='dx-field-label'>${editParams.seatPrice ? editParams.seatPrice : "Pick a seat for pricing"}</div><br/><br/>`);            
+      var rowView = $("<div id='rowView' class='dx-field-label'></div><br/><br/>");           
+      var seatView = $("<div id='seatView' class='dx-field-label'></div><br/><br/>");
+      
+      
+    
+      rowView.dxSelectBox({...rowOptions,
+                            value: editParams.seatRow,
+                            onValueChanged: function(e){
+                              if(seatView.dxSelectBox("instance").option("value")){ 
+                                $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
+                              }                                   
+                            }
+                          });
+      seatView.dxSelectBox({...seatOptions,
+                            value: editParams.seatNumber,
+                            onValueChanged: function(e){
+                              if(rowView.dxSelectBox("instance").option("value")){
+                                $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
+                              }                                    
+                            }
+                            });          
+    var scrollView = $("<div id='scrollView'></div>");
+    
+    scrollView.append(imageView, infoView, scheduleView, priceView, rowView, seatView).addClass("dx-fieldset");
+    
+    scrollView.dxScrollView({
+        height: '100%',
+        width: '100%'          
+    });          
+    
+    return scrollView;
         }; 
   
             
