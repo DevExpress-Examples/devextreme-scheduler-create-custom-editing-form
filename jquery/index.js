@@ -72,37 +72,38 @@ $(function(){
     });          
     
     return scrollView;
+
   }; 
 
           
   var editPopupOptions = { 
-      width: 500,
-      closeOnOutsideClick: true,
-      visible: false,       
-      toolbarItems: [            
-          {
-            toolbar: "bottom",
-            widget: "dxButton",
-            location: "after",
-            options: { 
-                text: "OK", 
-                onClick: function(){
-                  let newData = {
-                    seatPrice: $("#priceView").text(),
-                    seatRow: $("#rowView").dxSelectBox("instance").option("value"),
-                    seatNumber: $("#seatView").dxSelectBox("instance").option("value")                 
-                  };
+    width: 500,
+    closeOnOutsideClick: true,
+    visible: false,       
+    toolbarItems: [{
+      toolbar: "bottom",
+      widget: "dxButton",
+      location: "after",
+      options: { 
+        text: "OK", 
+        onClick: function(){
+          let newData = {
+            seatPrice: $("#priceView").text(),
+            seatRow: $("#rowView").dxSelectBox("instance").option("value"),
+            seatNumber: $("#seatView").dxSelectBox("instance").option("value")                 
+          };
 
-                  newData = {...editPopupOptions.data, ...newData};                 
+          newData = {...editPopupOptions.data, ...newData};                 
 
-                  if(newData.seatRow && newData.seatNumber){
-                    scheduler.updateAppointment(editPopupOptions.data, newData);                    
-                    DevExpress.ui.notify("Selected seat " + newData.seatRow + newData.seatNumber + " for " + newData.text + ". Enjoy!");
-                }
-                  editPopup.hide();
-                  }
-            }
-        }]     
+          if(newData.seatRow && newData.seatNumber){
+            scheduler.updateAppointment(editPopupOptions.data, newData);                    
+            DevExpress.ui.notify("Selected seat " + newData.seatRow + newData.seatNumber + " for " + newData.text + ". Enjoy!");
+          }
+          
+          editPopup.hide();
+        }
+      }
+    }]     
     
   };
   
