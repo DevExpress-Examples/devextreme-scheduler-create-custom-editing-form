@@ -45,32 +45,34 @@ $(function(){
     
   
     rowView.dxSelectBox({...rowOptions,
-                          value: editParams.seatRow,
-                          onValueChanged: function(e){
-                            if(seatView.dxSelectBox("instance").option("value")){ 
-                              $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
-                            }                                   
-                          }
-                        });
+      value: editParams.seatRow,
+      onValueChanged: function(e){
+        if(seatView.dxSelectBox("instance").option("value")){ 
+          $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
+        }                                   
+      }
+    });
+
     seatView.dxSelectBox({...seatOptions,
-                          value: editParams.seatNumber,
-                          onValueChanged: function(e){
-                            if(rowView.dxSelectBox("instance").option("value")){
-                              $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
-                            }                                    
-                          }
-                          });          
-  var scrollView = $("<div id='scrollView'></div>");
-  
-  scrollView.append(imageView, infoView, scheduleView, priceView, rowView, seatView).addClass("dx-fieldset");
-  
-  scrollView.dxScrollView({
+      value: editParams.seatNumber,
+      onValueChanged: function(e){
+        if(rowView.dxSelectBox("instance").option("value")){
+          $("#priceView").text(setSeatPrice(editParams.price, rowView.dxSelectBox("instance").option("value")));
+        }                                    
+      }
+      }); 
+
+    var scrollView = $("<div id='scrollView'></div>");
+    
+    scrollView.append(imageView, infoView, scheduleView, priceView, rowView, seatView).addClass("dx-fieldset");
+    
+    scrollView.dxScrollView({
       height: '100%',
       width: '100%'          
-  });          
-  
-  return scrollView;
-      }; 
+    });          
+    
+    return scrollView;
+  }; 
 
           
   var editPopupOptions = { 
