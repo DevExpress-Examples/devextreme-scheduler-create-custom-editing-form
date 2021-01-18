@@ -99,80 +99,76 @@ $(function(){
             scheduler.updateAppointment(editPopupOptions.data, newData);                    
             DevExpress.ui.notify("Selected seat " + newData.seatRow + newData.seatNumber + " for " + newData.text + ". Enjoy!");
           }
-          
+
           editPopup.hide();
         }
       }
     }]     
-    
   };
   
   var editAppointmentData;    
   var editPopup = $("#editpopup").dxPopup(editPopupOptions).dxPopup("instance");
   
   var scheduler =  $("#scheduler").dxScheduler({        
-      dataSource: data,     
-      editing: {
-        allowResizing: false,
-        allowDragging: false
-      },
-      views: ["day", "timelineDay"],
-      currentView: "day",
-      currentDate: new Date(2015, 4, 25),
-      firstDayOfWeek: 0,
-      startDayHour: 9,
-      endDayHour: 23,
-      showAllDayPanel: false,
-      height: 600,
-      onAppointmentFormOpening: function(e) {          
-        e.cancel = true;           
-        editAppointmentData = e.appointmentData;          
-        if(editAppointmentData.id)
-        {            
-          editPopup.option({
-            contentTemplate: function(container){
-              container.append(setContentTemplate(editAppointmentData));
-            },
-            title: data.find(e=> e.id == editAppointmentData.id).text,
-            visible: true
-          });
-        }
+    dataSource: data,     
+    editing: {
+      allowResizing: false,
+      allowDragging: false
+    },
+    views: ["day", "timelineDay"],
+    currentView: "day",
+    currentDate: new Date(2015, 4, 25),
+    firstDayOfWeek: 0,
+    startDayHour: 9,
+    endDayHour: 23,
+    showAllDayPanel: false,
+    height: 600,
+    onAppointmentFormOpening: function(e) {          
+      e.cancel = true;           
+      editAppointmentData = e.appointmentData;          
+      if(editAppointmentData.id){            
+        editPopup.option({
+          contentTemplate: function(container){
+            container.append(setContentTemplate(editAppointmentData));
+          },
+          title: data.find(e=> e.id == editAppointmentData.id).text,
+          visible: true
+        });
       }
-  }).dxScheduler("instance"); 
-    
+    }
+  }).dxScheduler("instance");    
            
-
 });
 
 
 var data = [{       
-        id: 1,
-        price: 10,
-        startDate: new Date(2015, 4, 25, 9, 10),
-        endDate: new Date(2015, 4, 25, 11, 1),
-        text: "His Girl Friday",
-        director: "Howard Hawks",
-        year: 1940,
-        image: "https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/movies/HisGirlFriday.jpg",
-        duration: 92
-    }, {
-        id: 2,
-        price: 5,
-        startDate: new Date(2015, 4, 25, 11, 30),
-        endDate: new Date(2015, 4, 25, 13, 2),
-        text: "Royal Wedding",
-        director: "Stanley Donen",
-        year: 1951,
-        image: "https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/movies/RoyalWedding.jpg",
-        duration: 93,        
-    }, {        
-        id: 3,
-        price: 15,
-        startDate: new Date(2015, 4, 25, 13, 30),
-        endDate: new Date(2015, 4, 25, 15, 21),
-        text: "A Star Is Born",
-        director: "William A. Wellman",
-        year: 1937,
-        image: "https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/movies/AStartIsBorn.jpg",
-        duration: 111        
-    }];
+  id: 1,
+  price: 10,
+  startDate: new Date(2015, 4, 25, 9, 10),
+  endDate: new Date(2015, 4, 25, 11, 1),
+  text: "His Girl Friday",
+  director: "Howard Hawks",
+  year: 1940,
+  image: "https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/movies/HisGirlFriday.jpg",
+  duration: 92
+}, {
+  id: 2,
+  price: 5,
+  startDate: new Date(2015, 4, 25, 11, 30),
+  endDate: new Date(2015, 4, 25, 13, 2),
+  text: "Royal Wedding",
+  director: "Stanley Donen",
+  year: 1951,
+  image: "https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/movies/RoyalWedding.jpg",
+  duration: 93,        
+}, {        
+  id: 3,
+  price: 15,
+  startDate: new Date(2015, 4, 25, 13, 30),
+  endDate: new Date(2015, 4, 25, 15, 21),
+  text: "A Star Is Born",
+  director: "William A. Wellman",
+  year: 1937,
+  image: "https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/movies/AStartIsBorn.jpg",
+  duration: 111        
+}];
