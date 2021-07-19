@@ -1,0 +1,205 @@
+@model IEnumerable<ASP.NET_Core.Models.SampleAppointment>
+
+<style>
+    .long-title h3 {
+        font-family: 'Segoe UI Light', 'Helvetica Neue Light', 'Segoe UI', 'Helvetica Neue', 'Trebuchet MS', Verdana;
+        font-weight: 200;
+        font-size: 28px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+</style>
+
+<div class="long-title">
+    <h3>DXCinema Upcoming Movies</h3>
+</div>
+
+@(Html.DevExtreme().Scheduler()
+    .ID("scheduler")
+    .DataSource(Model)
+    .StartDateExpr("StartDate")
+    .EndDateExpr("EndDate")
+    .TextExpr("Text")
+    .Views(new[] {
+    SchedulerViewType.Day,
+    SchedulerViewType.TimelineDay
+    })
+    .CurrentView(SchedulerViewType.Day)
+    .CurrentDate(new DateTime(2015, 4, 25))
+    .FirstDayOfWeek(0)
+    .StartDayHour(9)
+    .EndDayHour(23)
+    .ShowAllDayPanel(false)
+    .Height(600)
+    .OnAppointmentFormOpening("onAppointmentFormOpening"));
+
+@(Html.DevExtreme().Popup()
+    .ID("popup")
+    .Width(500)
+    .Height("80vh")
+    .CloseOnOutsideClick(true)
+    .Visible(new JS("isCustomPopupVisible"))
+    .Title(new JS("editAppointmentData.Text"))
+    .OnHiding("onHiding")
+    .ContentTemplate(new TemplateName("popup-template"))
+    .ToolbarItems(t =>
+    {
+    t.Add()
+    .Toolbar(Toolbar.Bottom)
+    .Location(ToolbarItemLocation.After).
+    Widget(w => w.Button()
+    .Text("OK")
+    .OnClick("setAppointment"));
+    }));
+
+
+@using (Html.DevExtreme().NamedTemplate("popup-template"))
+{
+    @(Html.DevExtreme().ScrollView()
+    .Width("100%")
+    .Height("100%")
+    .Content(@<text>
+        <img id="popup-image" src="" class="dx-field-label" />
+        <div class="dx-field-label">
+            <p>
+                <b id="popup-text"></b>
+            </p>
+            <p id="popup-year"></p>
+            <p id="popup-duration"></p>
+        </div>
+
+        <div class="dx-field-label">
+            <b id="popup-date"></b>
+        </div>
+
+        <div class="dx-field-label"><b>Price ($): </b></div>
+        <div id="popup-price" class="dx-field-label">
+        </div>
+
+        @(Html.DevExtreme().SelectBox()
+        .ID("rowView")
+        .ElementAttr(new JS("elementAttr"))
+        .DataSource(new JS("rows"))
+        .Width(400)
+        .Placeholder("Pick a row")
+        .Value(new JS("editAppointmentData.SeatRow"))
+        .OnValueChanged("onValueChangedRow")
+        )
+
+        @(Html.DevExtreme().SelectBox()
+        .ID("numberView")
+        .ElementAttr(new JS("elementAttr"))
+        .DataSource(new JS("seats"))
+        .Width(400)
+        .Placeholder("Pick a seat")
+        .Value(new JS("editAppointmentData.SeatNumber"))
+        .OnValueChanged("onValueChangedNumber")
+        )
+    </text>)
+    )
+}
+
+
+<script>
+    var editAppointmentData = {};
+    var oldAppointment = {};
+    var isCustomPopupVisible = false;
+    var customPopupTitle = "";
+
+    var elementAttr = {
+        class: "dx-field-label"
+    };
+
+    var rows = ['A', 'B', 'C', 'D'];
+    var seats = [1, 2, 3, 4, 5];
+
+    function onAppointmentFormOpening(e) {
+        e.cancel = true;
+        editAppointmentData = { ...e.appointmentData };
+        oldAppointment = e.appointmentData;
+        if (editAppointmentData.ID) {
+            isCustomPopupVisible = true;
+            customPopupTitle = editAppointmentData.Text
+
+            let customPopupOptions = {
+                visible: isCustomPopupVisible,
+                title: customPopupTitle
+            };
+
+            $("#popup").dxPopup("instance").option(customPopupOptions);
+
+            $("#popup-text").text(editAppointmentData.Text);
+            $("#popup-year").text(`Year: ${editAppointmentData.Year}`);
+            $("#popup-duration").text(`Duration: ${editAppointmentData.Duration} minutes`);
+
+
+            $("#popup-date").text(`${DevExpress.localization.formatDate(new Date(editAppointmentData.StartDate), "shortTime")} - ${DevExpress.localization.formatDate(new Date(editAppointmentData.EndDate), "shortTime")}`);
+            $("#popup-image").attr("src", editAppointmentData.Image);
+            $("#popup-price").text(calculatePrice(editAppointmentData.SeatRow, editAppointmentData.SeatNumber, editAppointmentData.price))
+
+            $("#rowView").dxSelectBox("instance").option("value", editAppointmentData.SeatRow);
+            $("#numberView").dxSelectBox("instance").option("value", editAppointmentData.SeatNumber);
+
+        }
+    }
+
+    function setAppointment() {
+        if (editAppointmentData.SeatRow && editAppointmentData.SeatNumber) {
+            let scheduler = $("#scheduler").dxScheduler("instance");
+            scheduler.updateAppointment(
+                oldAppointment,
+                editAppointmentData
+            );
+            DevExpress.ui.notify(`Selected seat ${editAppointmentData.SeatRow}${editAppointmentData.SeatNumber} for ${editAppointmentData.Text}. Enjoy!`);
+        }
+        $("#popup").dxPopup("instance").hide();
+    }
+
+    function onHiding(e) {
+        editAppointmentData = {};
+        oldAppointment = {};
+    }
+
+    function calculatePrice(SeatRow, SeatNumber, price) {
+        return SeatRow && SeatNumber ? "$" + setSeatPrice(price, SeatRow) : "Pick a seat for pricing";
+    }
+
+    function setSeatPrice(price, SeatRow) {
+        let rowPrice;
+        switch (SeatRow) {
+            case 'A':
+                rowPrice = 1;
+                break;
+            case 'B':
+                rowPrice = 2;
+                break;
+            case 'C':
+                rowPrice = 3;
+                break;
+            case 'D':
+                rowPrice = 4;
+                break;
+            default:
+                break;
+        }
+        return price * rowPrice;
+    }
+
+    function onValueChangedRow(e) {
+        editAppointmentData.SeatRow = e.value;
+        if (editAppointmentData.SeatRow && editAppointmentData.SeatNumber) {
+            let priceText = calculatePrice(editAppointmentData.SeatRow, editAppointmentData.SeatNumber, editAppointmentData.Price)
+            $("#popup-price").text(priceText);
+        }
+    }
+
+    function onValueChangedNumber(e) {
+        editAppointmentData.SeatNumber = e.value;
+        if (editAppointmentData.SeatRow && editAppointmentData.SeatNumber) {
+            let priceText = calculatePrice(editAppointmentData.SeatRow, editAppointmentData.SeatNumber, editAppointmentData.Price)
+            $("#popup-price").text(priceText);
+        }
+    }
+
+</script>
+
