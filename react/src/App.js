@@ -27,7 +27,7 @@ function reducer(state, action) {
 function App() {
     const [state, dispatch] = useReducer(reducer, initState);
 
-    const SchedulerInstance = useRef(null);
+    const SchedulerRef = useRef(null);
     const currentDate = new Date(2015, 4, 25);
 
     const buttonConfig = useMemo(() => {
@@ -36,7 +36,7 @@ function App() {
             onClick: function () {
                 if (state.editData.seatRow && state.editData.seatNumber) {
                     let oldAppointmentData = Data.find(x => x.id === state.editData.id);
-                    SchedulerInstance.current.instance.updateAppointment(
+                    SchedulerRef.current.instance.updateAppointment(
                         oldAppointmentData,
                         state.editData
                     );
@@ -137,7 +137,7 @@ function App() {
                 <h3>DXCinema Upcoming Movies</h3>
             </div>
             <Scheduler id="scheduler"
-                ref={SchedulerInstance}
+                ref={SchedulerRef}
                 dataSource={Data}
                 views={views}
                 defaultCurrentView="day"
