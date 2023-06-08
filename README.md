@@ -17,7 +17,7 @@ In our particular case, we use a custom editing form to select a seat for a chos
 
 - **jQuery**
     - [index.html](jquery/index.html)
-    - [script.js](jquery/script.js)
+    - [index.js](jquery/index.js)
 - **Angular**
     - [app.component.html](angular/src/app/app.component.html)
     - [app.component.ts](angular/src/app/app.component.ts)
