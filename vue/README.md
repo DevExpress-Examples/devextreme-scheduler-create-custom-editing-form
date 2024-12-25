@@ -27,6 +27,6 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Further help
 
-You can learn more about Vue in the [Vue documentation](https://vuejs.org/v2/guide/).
+You can learn more about Vue in the [Vue documentation](https://vuejs.org/guide/introduction.html).
 
 To get more help on DevExtreme submit an issue on [GitHub](https://github.com/DevExpress/devextreme/issues) or [Support Center](https://www.devexpress.com/Support/Center/Question/Create)
