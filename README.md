@@ -17,15 +17,15 @@ In our particular case, we use a custom editing form to select a seat for a chos
 ## Files to Review
 
 - **jQuery**
-    - [index.html](jquery/index.html)
-    - [index.js](jquery/index.js)
+    - [index.html](jQuery/index.html)
+    - [index.js](jQuery/index.js)
 - **Angular**
-    - [app.component.html](angular/src/app/app.component.html)
-    - [app.component.ts](angular/src/app/app.component.ts)
+    - [app.component.html](Angular/src/app/app.component.html)
+    - [app.component.ts](Angular/src/app/app.component.ts)
 - **Vue**
-    - [App.vue](vue/src/App.vue)
+    - [App.vue](Vue/src/App.vue)
 - **React**
-    - [App.js](react/src/App.js)
+    - [App.js](React/src/App.js)
 - **ASP.Net Core**    
     - [Index.cshtml](ASP.NET%20Core/ASP.NET%20Core/Views/Home/Index.cshtml)
     
