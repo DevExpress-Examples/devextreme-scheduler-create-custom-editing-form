@@ -12,7 +12,7 @@ The main idea is to use a [Popup](https://js.devexpress.com/Documentation/ApiRef
 
 In our particular case, we use a custom editing form to select a seat for a chosen movie.
 
-<div align="center"><img alt="DevExtreme Scheduler - How to create a custom editing form" src="scheduler-custom-editor.png" /></div>
+<div align="center"><img alt="DevExtreme Scheduler - How to create a custom editing form" src="images/scheduler-custom-editor.png" /></div>
 
 ## Files to Review
 
