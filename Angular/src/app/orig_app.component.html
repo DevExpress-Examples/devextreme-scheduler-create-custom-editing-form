@@ -1,0 +1,86 @@
+<div class="long-title">
+  <h3>DXCinema Upcoming Movies</h3>
+</div>
+
+<dx-scheduler
+  id="scheduler"
+  [dataSource]="data"
+  [views]="['day', 'timelineDay']"
+  currentView="day"
+  [currentDate]="currentDate"
+  [firstDayOfWeek]="0"
+  [startDayHour]="9"
+  [endDayHour]="23"
+  [showAllDayPanel]="false"
+  [height]="600"
+  (onAppointmentFormOpening)="onAppointmentFormOpening($event)">
+  <dxo-editing [allowResizing]="false" [allowDragging]="false"></dxo-editing>
+</dx-scheduler>
+
+<dx-popup
+  [width]="500"
+  [closeOnOutsideClick]="true"
+  [(visible)]="isCustomPopupVisible"
+  [title]="editAppointmentData.text"
+  (onHiding)="onHiding($event)">
+  <div *dxTemplate="let data of 'content'">
+    <dx-scroll-view 
+      width="100%" 
+      height="100%">
+      <img src="{{ editAppointmentData.image }}" class="dx-field-label" />
+      <div class="dx-field-label">
+        <p>
+          <b>{{ editAppointmentData.text }}</b>
+        </p>
+        <p>Year: {{ editAppointmentData.year }}</p>
+        <p>Duration: {{ editAppointmentData.duration }} minutes</p>
+      </div>
+
+      <div class="dx-field-label">
+        <b>{{ formatDate(editAppointmentData.startDate, "shortTime") }} -
+          {{ formatDate(editAppointmentData.endDate, "shortTime") }}</b>
+      </div>
+
+      <div class="dx-field-label"><b>Price ($): </b></div>
+      <div id="priceView" class="dx-field-label">
+        {{
+          editAppointmentData.seatRow && editAppointmentData.seatNumber
+            ? setSeatPrice(
+                editAppointmentData.price,
+                editAppointmentData.seatRow
+              )
+            : "Pick a seat for pricing"
+        }}
+      </div>      
+
+      <dx-select-box
+        id="rowView"
+        class="dx-field-label"
+        [dataSource]="rows"
+        [width]="400"
+        placeholder="Pick a row"
+        [(value)]="editAppointmentData.seatRow">
+      </dx-select-box>
+
+      <dx-select-box
+        id="seatView"
+        class="dx-field-label"
+        [dataSource]="seats"
+        [width]="400"
+        placeholder="Pick a seat"
+        [(value)]="editAppointmentData.seatNumber">
+      </dx-select-box>
+
+    </dx-scroll-view>
+  </div>
+
+  <dxi-toolbar-item
+    widget="dxButton"
+    toolbar="bottom"
+    location="after"
+    [options]="{
+      text: 'OK',
+      onClick: updateAppointment
+    }">
+  </dxi-toolbar-item>
+</dx-popup>
