@@ -1,4 +1,48 @@
-export const data = [
+export interface Data {
+  id: number;
+
+  price: number;
+
+  startDate: Date;
+
+  endDate: Date;
+
+  text: string;
+
+  director: string;
+
+  year: number;
+
+  image: string;
+
+  duration: number;
+}
+
+export class EditData implements Data {
+  id = 0;
+
+  price = 0;
+
+  startDate: Date = new Date();
+
+  endDate: Date = new Date();
+
+  text = '';
+
+  director = '';
+
+  year = 1900;
+
+  image = '';
+
+  duration = 0;
+
+  seatRow = '';
+
+  seatNumber = 0;
+}
+
+export const appointments: Data[] = [
   {
     id: 1,
     price: 10,
@@ -37,6 +81,6 @@ export const data = [
   },
 ];
 
-export const rows = ['A', 'B', 'C', 'D'];
+export const rows: string[] = ['A', 'B', 'C', 'D'];
 
-export const seats = [1, 2, 3, 4, 5];
+export const seats: number[] = [1, 2, 3, 4, 5];
