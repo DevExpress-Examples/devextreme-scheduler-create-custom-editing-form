@@ -1,29 +1,165 @@
 @using ASP_NET_Core.Models
 
-<h2>Home</h2>
+<div class="long-title">
+    <h3>DXCinema Upcoming Movies</h3>
+</div>
 
-@(Html.DevExtreme().DataGrid<SampleOrder>()
-    .ShowBorders(true)
-    .DataSource(d => d.Mvc().Controller("SampleData").LoadAction("Get").Key("OrderID"))
-    .Columns(columns => {
-        columns.AddFor(m => m.OrderID);
-        columns.AddFor(m => m.OrderDate);
-        columns.AddFor(m => m.CustomerName);
-        columns.AddFor(m => m.ShipCountry);
-        columns.AddFor(m => m.ShipCity);
+@(Html.DevExtreme().Scheduler()
+    .ID("scheduler")
+    .DataSource(Model)
+    .StartDateExpr("StartDate")
+    .EndDateExpr("EndDate")
+    .TextExpr("Text")
+    .Views(new[] {
+        SchedulerViewType.Day,
+        SchedulerViewType.TimelineDay
     })
-    .Paging(p => p.PageSize(10))
-    .FilterRow(f => f.Visible(true))
-    .HeaderFilter(f => f.Visible(true))
-    .GroupPanel(p => p.Visible(true))
-    .Grouping(g => g.AutoExpandAll(false))
-    .RemoteOperations(true)
-    .Summary(s => s
-        .TotalItems(totalItems => {
-            totalItems.AddFor(m => m.ShipCity).SummaryType(SummaryType.Count);
-        })
-        .GroupItems(groupItems => {
-            groupItems.Add().SummaryType(SummaryType.Count);
-        })
+    .CurrentView(SchedulerViewType.Day)
+    .CurrentDate(new DateTime(2015, 4, 25))
+    .FirstDayOfWeek(0)
+    .StartDayHour(9)
+    .EndDayHour(23)
+    .ShowAllDayPanel(false)
+    .Height(600)
+    .OnAppointmentFormOpening("onAppointmentFormOpening")
+);
+
+@(Html.DevExtreme().Popup()
+    .ID("popup")
+    .Width(500)
+    .Height(520)
+    .HideOnOutsideClick(true)
+    .Title(new JS("editAppointmentData.Text"))
+    .OnHiding("onHiding")
+    .ContentTemplate(new TemplateName("popup-template"))
+    .ToolbarItems(t =>
+    {
+        t.Add()
+            .Toolbar(Toolbar.Bottom)
+            .Location(ToolbarItemLocation.After).
+            Widget(w => w.Button()
+            .Text("OK")
+            .OnClick("setAppointment"));
+    })
+);
+
+@using (Html.DevExtreme().NamedTemplate("popup-template")) {
+    @(Html.DevExtreme().ScrollView()
+        .Width("90%")
+        .Height("90%")
+        .Content(@<text>
+            <div class="movie-popup-content">
+                <img id="movie-image" src=""/>
+                <div class="movie-details">
+                    <div>
+                        <p class="movie-title" id="movie-text"></p>
+                        <p id="movie-year"></p>
+                        <p id="movie-duration"></p>
+                    </div>
+                    <div class="movie-time" id="movie-time"></div>
+                    <p id="movie-price">Price ($): 
+                        <span id="price-view">Pick a seat for pricing</span>
+                    </p>
+                    @(Html.DevExtreme().SelectBox()
+                        .ID("row-view")
+                        .DataSource(new JS("rows"))
+                        .Width(400)
+                        .Placeholder("Pick a row")
+                        .Value(new JS("editAppointmentData.SeatRow"))
+                        .OnValueChanged("onValueChangedRow")
+                    )
+
+                    @(Html.DevExtreme().SelectBox()
+                        .ID("number-view")
+                        .DataSource(new JS("seats"))
+                        .Width(400)
+                        .Placeholder("Pick a seat")
+                        .Value(new JS("editAppointmentData.SeatNumber"))
+                        .OnValueChanged("onValueChangedNumber")
+                    )
+                </div>
+            </div>
+        </text>)
     )
-)
+}
+
+<script>
+    var editAppointmentData = {};
+    var oldAppointment = {};
+
+    var rows = ['A', 'B', 'C', 'D'];
+    var seats = [1, 2, 3, 4, 5];
+
+    function onAppointmentFormOpening(e) {
+        e.cancel = true;
+        editAppointmentData = { ...e.appointmentData };
+        oldAppointment = e.appointmentData;
+        if (editAppointmentData.ID) {
+            let customPopupOptions = {
+                visible: true,
+                title: editAppointmentData.Text
+            };
+
+            $("#popup").dxPopup("instance").option(customPopupOptions);
+
+            $("#movie-text").text(editAppointmentData.Text);
+            $("#movie-year").text(`Year: ${editAppointmentData.Year}`);
+            $("#movie-duration").text(`Duration: ${editAppointmentData.Duration} minutes`);
+
+            $("#movie-time").text(`${DevExpress.localization.formatDate(new Date(editAppointmentData.StartDate), "shortTime")} - ${DevExpress.localization.formatDate(new Date(editAppointmentData.EndDate), "shortTime")}`);
+            $("#movie-image").attr("src", editAppointmentData.Image);
+            $("#price-view").text(calculatePrice(editAppointmentData.SeatRow, editAppointmentData.SeatNumber, editAppointmentData.price))
+
+            $("#row-view").dxSelectBox("instance").option("value", editAppointmentData.SeatRow);
+            $("#number-view").dxSelectBox("instance").option("value", editAppointmentData.SeatNumber);
+        }
+    }
+
+    function setAppointment() {
+        if (editAppointmentData.SeatRow && editAppointmentData.SeatNumber) {
+            let scheduler = $("#scheduler").dxScheduler("instance");
+            scheduler.updateAppointment(
+                oldAppointment,
+                editAppointmentData
+            );
+            DevExpress.ui.notify(`Selected seat ${editAppointmentData.SeatRow}${editAppointmentData.SeatNumber} for ${editAppointmentData.Text}. Enjoy!`);
+        }
+        $("#popup").dxPopup("instance").hide();
+    }
+
+    function onHiding(e) {
+        editAppointmentData = {};
+        oldAppointment = {};
+    }
+
+    function calculatePrice(SeatRow, SeatNumber, price) {
+        return SeatRow && SeatNumber ? "$" + setSeatPrice(price, SeatRow) : "Pick a seat for pricing";
+    }
+
+    function setSeatPrice(basePrice, row) {
+      const multiplier = {
+        A: 1,
+        B: 2,
+        C: 3,
+        D: 4,
+      };
+      return basePrice * multiplier[row];
+    }
+
+    function onValueChangedRow(e) {
+        editAppointmentData.SeatRow = e.value;
+        if (editAppointmentData.SeatRow && editAppointmentData.SeatNumber) {
+            const priceText = calculatePrice(editAppointmentData.SeatRow, editAppointmentData.SeatNumber, editAppointmentData.Price)
+            $("#price-view").text(priceText);
+        }
+    }
+
+    function onValueChangedNumber(e) {
+        editAppointmentData.SeatNumber = e.value;
+        if (editAppointmentData.SeatRow && editAppointmentData.SeatNumber) {
+            const priceText = calculatePrice(editAppointmentData.SeatRow, editAppointmentData.SeatNumber, editAppointmentData.Price)
+            $("#price-view").text(priceText);
+        }
+    }
+
+</script>
