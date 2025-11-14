@@ -1,20 +1,47 @@
 import { Injectable } from '@angular/core';
 
-export class Data {
+export interface Data {
   id: number;
+
   price: number;
+
   startDate: Date;
+
   endDate: Date;
+
   text: string;
+
   director: string;
+
   year: number;
+
   image: string;
+
   duration: number;
 }
 
-export class EditData extends Data {
-  seatRow: string;
-  seatNumber: number;
+export class EditData implements Data {
+  id = 0;
+
+  price = 0;
+
+  startDate: Date = new Date();
+
+  endDate: Date = new Date();
+
+  text = '';
+
+  director = '';
+
+  year = 1900;
+
+  image = '';
+
+  duration = 0;
+
+  seatRow = '';
+
+  seatNumber = 0;
 }
 
 const data: Data[] = [
@@ -58,7 +85,7 @@ const data: Data[] = [
 
 @Injectable()
 export class Service {
-  getData() {
+  getData(): Data[] {
     return data;
   }
 
