@@ -1,4 +1,49 @@
-const Data = [{
+export interface Data {
+  id: number;
+
+  price: number;
+
+  startDate: Date;
+
+  endDate: Date;
+
+  text: string;
+
+  director: string;
+
+  year: number;
+
+  image: string;
+
+  duration: number;
+}
+
+export class EditData implements Data {
+  id = 0;
+
+  price = 0;
+
+  startDate: Date = new Date();
+
+  endDate: Date = new Date();
+
+  text = '';
+
+  director = '';
+
+  year = 1900;
+
+  image = '';
+
+  duration = 0;
+
+  seatRow = '';
+
+  seatNumber = 0;
+}
+
+export const appointments: Data[] = [
+  {
     id: 1,
     price: 10,
     startDate: new Date(2015, 4, 25, 9, 10),
@@ -33,10 +78,9 @@ const Data = [{
     image:
       'https://js.devexpress.com/Demos/WidgetsGallery/JSDemos/images/movies/AStartIsBorn.jpg',
     duration: 111,
-  }];
+  },
+];
 
-const Rows = ['A', 'B', 'C', 'D'];
+export const rows: string[] = ['A', 'B', 'C', 'D'];
 
-const Seats = [1, 2, 3, 4, 5];
-
-export { Data, Rows, Seats }
+export const seats: number[] = [1, 2, 3, 4, 5];
