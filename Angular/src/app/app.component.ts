@@ -60,7 +60,7 @@ export class AppComponent {
     }
   }
 
-  onHiding(e: any): void {
+  onHiding(_e: any): void {
     this.editAppointmentData = new EditData();
   }
 
