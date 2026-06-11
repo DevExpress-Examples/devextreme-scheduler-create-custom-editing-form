@@ -1,10 +1,9 @@
+import { bootstrapApplication } from '@angular/platform-browser';
 import config from 'devextreme/core/config';
+import { AppComponent } from './app/app.component';
 import { licenseKey } from './devextreme-license';
 
 config({ licenseKey });
-
-import { bootstrapApplication } from '@angular/platform-browser';
-import { AppComponent } from './app/app.component';
 
 bootstrapApplication(AppComponent)
   .catch((err) => {
