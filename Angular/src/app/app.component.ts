@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import notify from 'devextreme/ui/notify';
 import {
   DxButtonModule,
@@ -24,6 +24,7 @@ import { Data, EditData, Service } from './app.service';
     DxScrollViewModule,
     DxButtonModule,
   ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [Service],
 })
 export class AppComponent {
